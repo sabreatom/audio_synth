@@ -2,9 +2,12 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;    -- for the unsigned type
 
+library work;
+use work.waveform_lut_pkg.all;
+
 entity oscillator is
   generic (
-    CNTRL_WIDTH : natural := 24;
+    CNTRL_WIDTH : natural := 8;
     DATA_WIDTH  : natural := 24
     );
   port (
@@ -138,7 +141,7 @@ end process waveform_out_reg;
 --Waveform lookup tables:
 ----------------------------------------
 
-
+waveform_out_sig <= sine_lut(to_integer(unsinged(phase_cntr_val_sig)));
 
 ----------------------------------------
 
