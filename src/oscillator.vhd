@@ -3,7 +3,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;    -- for the unsigned type
 
 library work;
-use work.waveform_lut_pkg.all;
+use work.waveform_lut.all;
 
 entity oscillator is
   generic (
@@ -12,7 +12,6 @@ entity oscillator is
     );
   port (
     --datapath:
-    din_i           : in std_logic_vector(DATA_WIDTH - 1 downto 0);
     dout_o          : out std_logic_vector(DATA_WIDTH - 1 downto 0);
 
     --control:
@@ -52,7 +51,7 @@ begin
 
 freq_reg: process(clk_i, rst_i, en_i, freq_i)
 begin
-    if rising_edge() then
+    if rising_edge(clk_i) then
         if (rst_i = '1') then
             freq_val_sig <= (others => '0');
         else
@@ -71,7 +70,7 @@ end process freq_reg;
 
 phase_reg: process(clk_i, rst_i, en_i, phase_i)
 begin
-    if rising_edge() then
+    if rising_edge(clk_i) then
         if (rst_i = '1') then
             phase_val_sig <= (others => '0');
         else
@@ -88,9 +87,9 @@ end process phase_reg;
 --Phase counter:
 ----------------------------------------
 
-phase_cntr: process(clk_i, rst_i, en_i, freq_val_sig):
+phase_cntr: process(clk_i, rst_i, en_i, freq_val_sig)
 begin
-    if rising_edge() then
+    if rising_edge(clk_i) then
         if (rst_i = '1') then
             phase_cntr_val_sig <= (others => '0');
         else
@@ -109,7 +108,7 @@ end process phase_cntr;
 
 waveform_sel_reg: process(clk_i, rst_i, en_i, waveform_sel_i)
 begin
-    if rising_edge() then
+    if rising_edge(clk_i) then
         if (rst_i = '1') then
             waveform_sel_sig <= (others => '0');
         else
@@ -128,11 +127,11 @@ end process waveform_sel_reg;
 
 waveform_out_reg: process(clk_i, rst_i, waveform_out_sig)
 begin
-    if rising_edge() then
+    if rising_edge(clk_i) then
         if (rst_i = '1') then
             dout_o <= (others => '0');
         else
-            dout_o <= waveform_out_sig;
+            dout_o <= std_logic_vector(waveform_out_sig);
         end if;
     end if;
 end process waveform_out_reg;
@@ -141,7 +140,7 @@ end process waveform_out_reg;
 --Waveform lookup tables:
 ----------------------------------------
 
-waveform_out_sig <= sine_lut(to_integer(unsinged(phase_cntr_val_sig)));
+waveform_out_sig <= to_unsigned(sine_lut(to_integer(unsigned(phase_cntr_val_sig))), DATA_WIDTH);
 
 ----------------------------------------
 

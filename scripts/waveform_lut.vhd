@@ -1,4 +1,4 @@
-package waveform_lut_pkg is
+package waveform_lut is
 type t_sine_array is array (0 to 255) of natural;
 constant sine_lut : t_sine_array :=
 	(8388608,
@@ -258,8 +258,8 @@ constant sine_lut : t_sine_array :=
 	7976998,
 	8182741);
 
-end package waveform_lut_pkg;
+end package waveform_lut;
 
-package body waveform_lut_pkg is
+package body waveform_lut is
 
-end package body waveform_lut_pkg;
+end package body waveform_lut;
