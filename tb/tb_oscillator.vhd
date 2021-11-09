@@ -68,7 +68,9 @@ begin
     freq_i <= std_logic_vector(to_unsigned(1, CNTRL_WIDTH));
     phase_i <= std_logic_vector(to_unsigned(0, CNTRL_WIDTH));
     waveform_sel_i <= "000";
-    wait for 2000 ns;
+    wait for 3000 ns;
+    freq_i <= std_logic_vector(to_unsigned(10, CNTRL_WIDTH));
+    wait for 100 ns;
     wait;
   end process stim;
 end tb ;
