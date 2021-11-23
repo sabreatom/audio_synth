@@ -9,13 +9,12 @@ end tb_dac_pwm;
 architecture tb of tb_dac_pwm is
     component dac_pwm
         generic (
-            COUNTER_PERIOD  : natural := 4095 -- 2**12 -1
+            COUNTER_PERIOD  : natural := 4095; -- 2**12 -1
             SAMPLE_WIDTH    : natural := 12
         );
         port (
             --datapath:
             din_i           : in std_logic_vector(SAMPLE_WIDTH - 1 downto 0);
-            dout_o          : out std_logic_vector(SAMPLE_WIDTH - 1 downto 0);
             wr_i            : in std_logic;
             sample_o        : out std_logic;
             pwm_o           : out std_logic;
@@ -29,11 +28,10 @@ architecture tb of tb_dac_pwm is
 
     constant CLK_PERIOD         : time    := 10 ns; --100MHz
 
-    constant COUNTER_PERIOD     : natural := 1023
-    constant SAMPLE_WIDTH       : natural := 12
+    constant COUNTER_PERIOD     : natural := 1023;
+    constant SAMPLE_WIDTH       : natural := 12;
 
     signal din_i                : std_logic_vector(SAMPLE_WIDTH - 1 downto 0);
-    signal dout_o               : std_logic_vector(SAMPLE_WIDTH - 1 downto 0);
     signal wr_i                 : std_logic;
     signal sample_o             : std_logic;
     signal pwm_o                : std_logic;
@@ -49,7 +47,6 @@ begin
     )
     port map (
         din_i => din_i,
-        dout_o => dout_o,
         wr_i => wr_i,
         sample_o => sample_o,
         pwm_o => pwm_o,
@@ -71,6 +68,7 @@ begin
         rst_i <= '1';
         en_i <= '1';
         wait for CLK_PERIOD;
+        rst_i <= '0';
         din_i <= std_logic_vector(to_unsigned(124, SAMPLE_WIDTH));
         wr_i <= '1';
         wait for CLK_PERIOD;

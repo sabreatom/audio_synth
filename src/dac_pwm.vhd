@@ -4,13 +4,12 @@ use IEEE.numeric_std.all;    -- for the unsigned type
 
 entity dac_pwm is
   generic (
-    COUNTER_PERIOD  : natural := 4095 -- 2**12 -1
+    COUNTER_PERIOD  : natural := 4095; -- 2**12 -1
     SAMPLE_WIDTH    : natural := 12
     );
   port (
     --datapath:
     din_i           : in std_logic_vector(SAMPLE_WIDTH - 1 downto 0);
-    dout_o          : out std_logic_vector(SAMPLE_WIDTH - 1 downto 0);
     wr_i            : in std_logic;
     sample_o        : out std_logic;
     pwm_o           : out std_logic;
