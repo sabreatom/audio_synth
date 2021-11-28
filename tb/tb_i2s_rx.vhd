@@ -26,7 +26,10 @@ architecture tb of tb_i2s_rx is
 
     constant SAMPLE_WIDTH       : natural := 24;
     constant CLK_PERIOD         : time    := 10 ns; --100MHz
-    constant SCK_PERIOD         : time    := 10400 ns; --96kHz
+    --constant SCK_PERIOD         : time    := 10400 ns; --96kHz
+    constant SCK_PERIOD         : time    := 50 ns;
+
+    constant I2S_TEST_DATA      : std_logic_vector(SAMPLE_WIDTH - 1 downto 0) := x"AA55F1";
 
     signal sd_i             : std_logic;
     signal ws_i             : std_logic;
@@ -66,9 +69,9 @@ begin
 
   sck_gen: process
   begin
-    clk_i <= '0';
+    sck_i <= '0';
     wait for SCK_PERIOD / 2;
-    clk_i <= '1';
+    sck_i <= '1';
     wait for SCK_PERIOD / 2;
   end process sck_gen;
 
@@ -76,9 +79,33 @@ begin
   begin
     rst_i <= '1';
     en_i <= '1';
+    ws_i <= '0';
     wait for CLK_PERIOD;
+    rst_i <= '0';
+    wait for CLK_PERIOD;
+    --I2S datatransfer left channel:
+    for i in SAMPLE_WIDTH - 1 downto 0 loop
+      wait until (falling_edge(sck_i));
+      sd_i <= I2S_TEST_DATA(i);
+      if i = 0 then
+        ws_i <= '1';
+      else
+        ws_i <= '0';
+      end if;
+    end loop;
 
-    wait for 100 ns;
+    --I2S datatransfer left channel:
+    for i in SAMPLE_WIDTH - 1 downto 0 loop
+      wait until (falling_edge(sck_i));
+      sd_i <= I2S_TEST_DATA(i);
+      if i = 0 then
+        ws_i <= '0';
+      else
+        ws_i <= '1';
+      end if;
+    end loop;
+    
+    wait until (falling_edge(sck_i));
     wait;
   end process stim;
 end tb ;
